@@ -1,3 +1,40 @@
+2009-12-29 11:25  sobrado
+
+	* inetd.8: replace a few remaining UNIX terms with .Ux macros; this
+	  diff completes the changes from Oct 22.
+
+2009-11-02 21:03  otto
+
+	* inetd.c: we have closefrom(2), so use it; ok deraadt@ tedu@
+
+2009-10-28 00:59  deraadt
+
+	* inetd.c: rcsid[] and sccsid[] and copyright[] are essentially
+	  unmaintained (and unmaintainable).  these days, people use
+	  source.  these id's do not provide any benefit, and do hurt the
+	  small install media (the 33,000 line diff is essentially
+	  mechanical) ok with the idea millert, ok dms
+
+2008-07-28 17:42  claudio
+
+	* inetd.c: Do not use __progname in inetd as it is not portable.
+	  Instead hardcode it to "inetd" in the few locations that print
+	  out the program name.  requested and OK deraadt@
+
+2008-07-27 12:06  claudio
+
+	* inetd.c: Use __progname instead of hand rolled version using
+	  argv[0].  Diff from Gleydson Soares gsoares at gmail dot com OK
+	  millert@
+
+2008-06-28 12:54  sobrado
+
+	* inetd.8, inetd.c: add an underscore to argument name.
+
+2008-06-04 20:11  miod
+
+	* inetd.c: adderss -> address
+
 2008-01-25 14:52  espie
 
 	* inetd.c: validate argv, okay otto@, henning@

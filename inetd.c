@@ -1,4 +1,4 @@
-/*	$OpenBSD: inetd.c,v 1.125 2008/01/05 09:53:42 jmc Exp $	*/
+/*	$OpenBSD: inetd.c,v 1.131 2009/10/27 23:59:51 deraadt Exp $	*/
 
 /*
  * Copyright (c) 1983,1991 The Regents of the University of California.
@@ -28,17 +28,6 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
-#ifndef lint
-char copyright[] =
-"@(#) Copyright (c) 1983 Regents of the University of California.\n\
- All rights reserved.\n";
-#endif /* not lint */
-
-#ifndef lint
-/*static const char sccsid[] = "from: @(#)inetd.c	5.30 (Berkeley) 6/3/91";*/
-static const char rcsid[] = "$OpenBSD: inetd.c,v 1.125 2008/01/05 09:53:42 jmc Exp $";
-#endif /* not lint */
 
 /*
  * Inetd - Internet super-server
@@ -300,7 +289,6 @@ int	dg_broadcast(struct in_addr *in);
 
 #define NUMINT	(sizeof(intab) / sizeof(struct inent))
 char	*CONFIG = _PATH_INETDCONF;
-char	*progname;
 
 void
 fd_grow(fd_set **fdsp, int *bytes, int fd)
@@ -332,10 +320,7 @@ main(int argc, char *argv[])
 	struct servtab *sep;
 	extern char *optarg;
 	extern int optind;
-
-	progname = strrchr(argv[0], '/');
-	progname = progname ? progname + 1 : argv[0];
-
+	
 	while ((ch = getopt(argc, argv, "dR:")) != -1)
 		switch (ch) {
 		case 'd':
@@ -359,8 +344,7 @@ main(int argc, char *argv[])
 		case '?':
 		default:
 			fprintf(stderr,
-			    "usage: %s [-d] [-R rate] [configuration file]\n",
-			    progname);
+			    "usage: inetd [-d] [-R rate] [configuration_file]\n");
 			exit(1);
 		}
 	argc -= optind;
@@ -372,13 +356,11 @@ main(int argc, char *argv[])
 	if (argc > 0)
 		CONFIG = argv[0];
 	if (CONFIG == NULL) {
-		fprintf(stderr, "%s: non-root must specify a config file\n",
-		    progname);
+		fprintf(stderr, "inetd: non-root must specify a config file\n");
 		exit(1);
 	}
 	if (argc > 1) {
-		fprintf(stderr, "%s: more than one argument specified\n",
-		    progname);
+		fprintf(stderr, "inetd: more than one argument specified\n");
 		exit(1);
 	}
 
@@ -396,7 +378,7 @@ main(int argc, char *argv[])
 		setgroups(1, &gid);
 	}
 
-	openlog(progname, LOG_PID | LOG_NOWAIT, LOG_DAEMON);
+	openlog("inetd", LOG_PID | LOG_NOWAIT, LOG_DAEMON);
 	logpid();
 
 	if (getrlimit(RLIMIT_NOFILE, &rlim_nofile) < 0) {
@@ -571,7 +553,7 @@ dg_badinput(struct sockaddr *sa)
 		if (IN6_IS_ADDR_MULTICAST(in6) || IN6_IS_ADDR_UNSPECIFIED(in6))
 			goto bad;
 		/*
-		 * OpenBSD does not support IPv4 mapped adderss (RFC2553
+		 * OpenBSD does not support IPv4 mapped address (RFC2553
 		 * inbound behavior) at all.  We should drop it.
 		 */
 		if (IN6_IS_ADDR_V4MAPPED(in6))
@@ -1995,8 +1977,7 @@ spawn(struct servtab *sep, int ctrl)
 			dup2(STDIN_FILENO, STDOUT_FILENO);
 			dup2(STDIN_FILENO, STDERR_FILENO);
 			closelog();
-			for (tmpint = rlim_nofile_cur-1; --tmpint > 2; )
-				(void)close(tmpint);
+			closefrom(3);
 			sigaction(SIGPIPE, &sapipe, NULL);
 			execv(sep->se_server, sep->se_argv);
 			if (sep->se_socktype != SOCK_STREAM)
