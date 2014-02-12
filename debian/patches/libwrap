@@ -1,6 +1,6 @@
 --- a/inetd.c
 +++ b/inetd.c
-@@ -175,6 +175,11 @@ size_t strlcpy(char *, const char *, siz
+@@ -164,6 +164,11 @@ size_t strlcpy(char *, const char *, siz
  #define	CNT_INTVL	60		/* servers in CNT_INTVL sec. */
  #define	RETRYTIME	(60*10)		/* retry after bind or server fail */
  
@@ -12,8 +12,8 @@
  int	 debug = 0;
  int	 nsock, maxsock;
  fd_set	*allsockp;
-@@ -347,7 +352,7 @@ main(int argc, char *argv[], char *envp[
- 
+@@ -332,7 +337,7 @@ main(int argc, char *argv[], char *envp[
+ 	
  	initsetproctitle(argc, argv, envp);
  
 -	while ((ch = getopt(argc, argv, "dER:")) != -1)
@@ -21,7 +21,7 @@
  		switch (ch) {
  		case 'd':
  			debug = 1;
-@@ -355,6 +360,15 @@ main(int argc, char *argv[], char *envp[
+@@ -340,6 +345,15 @@ main(int argc, char *argv[], char *envp[
  		case 'E':
  			keepenv = 1;
  			break;
@@ -37,16 +37,16 @@
  		case 'R': {	/* invocation rate */
  			char *p;
  			int val;
-@@ -372,7 +386,7 @@ main(int argc, char *argv[], char *envp[
+@@ -357,7 +371,7 @@ main(int argc, char *argv[], char *envp[
  		case '?':
  		default:
  			fprintf(stderr,
--			    "usage: %s [-dE] [-R rate] [configuration file]\n",
-+			    "usage: %s [-dEl] [-R rate] [configuration file]\n",
- 			    progname);
+-			    "usage: inetd [-dE] [-R rate] [configuration_file]\n");
++			    "usage: inetd [-dEl] [-R rate] [configuration_file]\n");
  			exit(1);
  		}
-@@ -1970,6 +1984,47 @@ spawn(struct servtab *sep, int ctrl)
+ 	argc -= optind;
+@@ -1952,6 +1966,47 @@ spawn(struct servtab *sep, int ctrl)
  	}
  	sigprocmask(SIG_SETMASK, &emptymask, NULL);
  	if (pid == 0) {
@@ -102,7 +102,7 @@
  .Op Fl E
 +.Op Fl l
  .Op Fl R Ar rate
- .Op Ar configuration file
+ .Op Ar configuration_file
  .Sh DESCRIPTION
 @@ -70,6 +71,13 @@ from laundering the environment.  Withou
  potentially harmful environent variables, including

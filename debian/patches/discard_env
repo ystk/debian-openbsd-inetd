@@ -1,6 +1,6 @@
 --- a/inetd.c
 +++ b/inetd.c
-@@ -301,6 +301,7 @@ int	bump_nofile(void);
+@@ -293,6 +293,7 @@ int	bump_nofile(void);
  struct servtab *enter(struct servtab *);
  int	matchconf(struct servtab *, struct servtab *);
  int	dg_broadcast(struct in_addr *in);
@@ -8,7 +8,7 @@
  
  #define NUMINT	(sizeof(intab) / sizeof(struct inent))
  char	*CONFIG = _PATH_INETDCONF;
-@@ -333,6 +334,7 @@ main(int argc, char *argv[], char *envp[
+@@ -324,17 +325,21 @@ main(int argc, char *argv[], char *envp[
  {
  	fd_set *fdsrp = NULL;
  	int readablen = 0, ch;
@@ -16,8 +16,7 @@
  	struct servtab *sep;
  	extern char *optarg;
  	extern int optind;
-@@ -342,11 +344,14 @@ main(int argc, char *argv[], char *envp[
- 
+ 	
  	initsetproctitle(argc, argv, envp);
  
 -	while ((ch = getopt(argc, argv, "dR:")) != -1)
@@ -32,13 +31,12 @@
  		case 'R': {	/* invocation rate */
  			char *p;
  			int val;
-@@ -364,13 +369,17 @@ main(int argc, char *argv[], char *envp[
+@@ -352,12 +357,16 @@ main(int argc, char *argv[], char *envp[
  		case '?':
  		default:
  			fprintf(stderr,
--			    "usage: %s [-d] [-R rate] [configuration file]\n",
-+			    "usage: %s [-dE] [-R rate] [configuration file]\n",
- 			    progname);
+-			    "usage: inetd [-d] [-R rate] [configuration_file]\n");
++			    "usage: inetd [-dE] [-R rate] [configuration_file]\n");
  			exit(1);
  		}
  	argc -= optind;
@@ -51,7 +49,7 @@
  	uid = getuid();
  	if (uid != 0)
  		CONFIG = NULL;
-@@ -2071,3 +2080,45 @@ spawn(struct servtab *sep, int ctrl)
+@@ -2057,3 +2066,45 @@ spawn(struct servtab *sep, int ctrl)
  	if (!sep->se_wait && sep->se_socktype == SOCK_STREAM)
  		close(ctrl);
  }
@@ -105,7 +103,7 @@
  .Op Fl d
 +.Op Fl E
  .Op Fl R Ar rate
- .Op Ar configuration file
+ .Op Ar configuration_file
  .Sh DESCRIPTION
 @@ -62,6 +63,13 @@ The options are as follows:
  .Bl -tag -width Ds

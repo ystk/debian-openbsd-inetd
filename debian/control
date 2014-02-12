@@ -2,16 +2,15 @@ Source: openbsd-inetd
 Section: net
 Priority: optional
 Maintainer: Marco d'Itri <md@linux.it>
-Build-Depends: debhelper (>= 5.0), quilt (>= 0.40), hardening-includes, libwrap0-dev
-Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 5.0), libwrap0-dev
+Standards-Version: 3.9.3.1
 
 Package: openbsd-inetd
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.2-13), update-inetd, tcpd
-Conflicts: netkit-inetd
-Replaces: netkit-inetd
-Provides: inet-superserver, netkit-inetd
-Description: The OpenBSD Internet Superserver
+Provides: inet-superserver
+Description: OpenBSD Internet Superserver
  The inetd server is a network daemon program that specializes in managing
  incoming network connections. Its configuration file tells it what
  program needs to be run when an incoming connection is received. Any

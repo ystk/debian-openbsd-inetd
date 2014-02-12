@@ -1,25 +1,38 @@
 --- a/inetd.8
 +++ b/inetd.8
-@@ -149,7 +149,8 @@ The
+@@ -42,11 +42,7 @@
+ .Op Ar configuration_file
+ .Sh DESCRIPTION
+ .Nm inetd
+-should be run at boot time by
+-.Pa /etc/rc
+-(see
+-.Xr rc 8 ) .
+-It then listens for connections on certain internet sockets.
++listens for connections on certain internet sockets.
+ When a connection is found on one
+ of its sockets, it decides what service the socket
+ corresponds to, and invokes a program to service the request.
+@@ -149,7 +145,8 @@ The
  .Em service name
  entry is the name of a valid service in
  the file
 -.Pa /etc/services .
-+.Pa /etc/services 
++.Pa /etc/services
 +or a port number.
  For
  .Dq internal
  services (discussed below), the service
-@@ -166,7 +167,7 @@ The part on the right of the
+@@ -166,7 +163,7 @@ The part on the right of the
  is the RPC version number.
  This can simply be a single numeric argument or a range of versions.
  A range is bounded by the low version to the high version -
 -.Dq rusers/1-3 .
 +.Dq rusers/1\-3 .
  For
- .Ux
- domain sockets this field specifies the path name of the socket.
-@@ -186,7 +187,8 @@ reliably delivered message, or sequenced
+ .Ux Ns -domain
+ sockets this field specifies the path name of the socket.
+@@ -186,7 +183,8 @@ reliably delivered message, or sequenced
  The
  .Em protocol
  must be a valid protocol as given in
@@ -29,7 +42,7 @@
  Examples might be
  .Dq tcp
  or
-@@ -378,9 +380,7 @@ If you have only one server on
+@@ -377,9 +375,7 @@ If you have only one server on
  only IPv6 traffic will be routed to the server.
  .El
  .Sh SEE ALSO
@@ -39,7 +52,7 @@
  .Xr ftpd 8 ,
  .Xr identd 8 ,
  .Xr rshd 8 ,
-@@ -395,7 +395,23 @@ Support for Sun-RPC
+@@ -394,7 +390,23 @@ Support for Sun-RPC
  based services is modelled after that
  provided by SunOS 4.1.
  IPv6 support was added by the KAME project in 1999.
@@ -65,7 +78,7 @@
  This is largely because the
 --- a/inetd.c
 +++ b/inetd.c
-@@ -139,6 +139,7 @@ static const char rcsid[] = "$OpenBSD: i
+@@ -128,6 +128,7 @@
  #include <sys/un.h>
  #include <sys/file.h>
  #include <sys/wait.h>
@@ -73,7 +86,7 @@
  #include <sys/time.h>
  #include <sys/resource.h>
  
-@@ -157,13 +158,18 @@ static const char rcsid[] = "$OpenBSD: i
+@@ -146,13 +147,18 @@
  #include <stdlib.h>
  #include <unistd.h>
  #include <string.h>
@@ -93,7 +106,7 @@
  #define	TOOMANY		256		/* don't start more than TOOMANY */
  #define	CNT_INTVL	60		/* servers in CNT_INTVL sec. */
  #define	RETRYTIME	(60*10)		/* retry after bind or server fail */
-@@ -340,7 +346,6 @@ main(int argc, char *argv[])
+@@ -325,7 +331,6 @@ main(int argc, char *argv[])
  		switch (ch) {
  		case 'd':
  			debug = 1;
@@ -101,7 +114,7 @@
  			break;
  		case 'R': {	/* invocation rate */
  			char *p;
-@@ -385,9 +390,13 @@ main(int argc, char *argv[])
+@@ -367,9 +372,13 @@ main(int argc, char *argv[])
  	umask(022);
  	if (debug == 0) {
  		daemon(0, 0);
@@ -115,7 +128,7 @@
  
  	if (uid == 0) {
  		gid_t gid = getgid();
-@@ -432,6 +441,15 @@ main(int argc, char *argv[])
+@@ -414,6 +423,15 @@ main(int argc, char *argv[])
  	sa.sa_handler = SIG_IGN;
  	sigaction(SIGPIPE, &sa, &sapipe);
  
@@ -131,7 +144,7 @@
  	for (;;) {
  		int n, ctrl = -1;
  
-@@ -587,9 +605,6 @@ dg_badinput(struct sockaddr *sa)
+@@ -569,9 +587,6 @@ dg_badinput(struct sockaddr *sa)
  		return 0;
  	}
  
@@ -141,7 +154,7 @@
  	return (0);
  
  bad:
-@@ -599,6 +614,7 @@ bad:
+@@ -581,6 +596,7 @@ bad:
  int
  dg_broadcast(struct in_addr *in)
  {
@@ -149,7 +162,7 @@
  	struct ifaddrs *ifa, *ifap;
  	struct sockaddr_in *sin;
  
-@@ -615,6 +631,7 @@ dg_broadcast(struct in_addr *in)
+@@ -597,6 +613,7 @@ dg_broadcast(struct in_addr *in)
  		}
  	}
  	freeifaddrs(ifap);
@@ -157,7 +170,7 @@
  	return (0);
  }
  
-@@ -1861,7 +1878,7 @@ print_service(char *action, struct servt
+@@ -1843,7 +1860,7 @@ print_service(char *action, struct servt
  	fprintf(stderr,
  	    " wait.max=%hd.%d user:group=%s:%s builtin=%lx server=%s\n",
  	    sep->se_wait, sep->se_max, sep->se_user,
@@ -166,7 +179,7 @@
  	    (long)sep->se_bi, sep->se_server);
  }
  
-@@ -1969,6 +1986,7 @@ spawn(struct servtab *sep, int ctrl)
+@@ -1951,6 +1968,7 @@ spawn(struct servtab *sep, int ctrl)
  				if (uid != pwd->pw_uid)
  					exit(1);
  			} else {
@@ -174,7 +187,7 @@
  				tmpint = LOGIN_SETALL &
  				    ~(LOGIN_SETGROUP|LOGIN_SETLOGIN);
  				if (pwd->pw_uid)
-@@ -1984,6 +2002,53 @@ spawn(struct servtab *sep, int ctrl)
+@@ -1966,6 +1984,53 @@ spawn(struct servtab *sep, int ctrl)
  					    sep->se_service, sep->se_proto);
  					exit(1);
  				}
@@ -294,3 +307,121 @@
 +
 +	return(s - src - 1);	/* count does not include NUL */
 +}
+--- /dev/null
++++ b/bsd-closefrom.c
+@@ -0,0 +1,115 @@
++/*
++ * Copyright (c) 2004-2005 Todd C. Miller <Todd.Miller@courtesan.com>
++ *
++ * Permission to use, copy, modify, and distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++
++#define HAVE_FCNTL_H
++#define HAVE_DIRENT_H
++#ifdef linux
++#define HAVE_DIRFD
++#define HAVE_PROC_PID
++#endif
++#define HAVE_SYSCONF
++
++#ifndef HAVE_CLOSEFROM
++
++#include <sys/types.h>
++#include <sys/param.h>
++#include <unistd.h>
++#include <stdio.h>
++#ifdef HAVE_FCNTL_H
++# include <fcntl.h>
++#endif
++#include <limits.h>
++#include <stdlib.h>
++#include <stddef.h>
++#include <string.h>
++#include <unistd.h>
++#ifdef HAVE_DIRENT_H
++# include <dirent.h>
++# define NAMLEN(dirent) strlen((dirent)->d_name)
++#else
++# define dirent direct
++# define NAMLEN(dirent) (dirent)->d_namlen
++# ifdef HAVE_SYS_NDIR_H
++#  include <sys/ndir.h>
++# endif
++# ifdef HAVE_SYS_DIR_H
++#  include <sys/dir.h>
++# endif
++# ifdef HAVE_NDIR_H
++#  include <ndir.h>
++# endif
++#endif
++
++#ifndef OPEN_MAX
++# define OPEN_MAX	256
++#endif
++
++#if 0
++__unused static const char rcsid[] = "$Sudo: closefrom.c,v 1.11 2006/08/17 15:26:54 millert Exp $";
++#endif /* lint */
++
++/*
++ * Close all file descriptors greater than or equal to lowfd.
++ */
++#ifdef HAVE_FCNTL_CLOSEM
++void
++closefrom(int lowfd)
++{
++    (void) fcntl(lowfd, F_CLOSEM, 0);
++}
++#else
++void
++closefrom(int lowfd)
++{
++    long fd, maxfd;
++#if defined(HAVE_DIRFD) && defined(HAVE_PROC_PID)
++    char fdpath[PATH_MAX], *endp;
++    struct dirent *dent;
++    DIR *dirp;
++    int len;
++
++    /* Check for a /proc/$$/fd directory. */
++    len = snprintf(fdpath, sizeof(fdpath), "/proc/%ld/fd", (long)getpid());
++    if (len > 0 && (size_t)len <= sizeof(fdpath) && (dirp = opendir(fdpath))) {
++	while ((dent = readdir(dirp)) != NULL) {
++	    fd = strtol(dent->d_name, &endp, 10);
++	    if (dent->d_name != endp && *endp == '\0' &&
++		fd >= 0 && fd < INT_MAX && fd >= lowfd && fd != dirfd(dirp))
++		(void) close((int) fd);
++	}
++	(void) closedir(dirp);
++    } else
++#endif
++    {
++	/*
++	 * Fall back on sysconf() or getdtablesize().  We avoid checking
++	 * resource limits since it is possible to open a file descriptor
++	 * and then drop the rlimit such that it is below the open fd.
++	 */
++#ifdef HAVE_SYSCONF
++	maxfd = sysconf(_SC_OPEN_MAX);
++#else
++	maxfd = getdtablesize();
++#endif /* HAVE_SYSCONF */
++	if (maxfd < 0)
++	    maxfd = OPEN_MAX;
++
++	for (fd = lowfd; fd < maxfd; fd++)
++	    (void) close((int) fd);
++    }
++}
++#endif /* !HAVE_FCNTL_CLOSEM */
++#endif /* HAVE_CLOSEFROM */

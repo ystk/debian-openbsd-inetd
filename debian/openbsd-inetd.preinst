@@ -48,24 +48,6 @@ EOF
   chmod 644 /etc/inetd.conf
 }
 
-upgrade_from_old_inetd() {
-  if [ "$2" ] && dpkg --compare-versions "$2" ge 0.20040915-1; then
-    return 0
-  fi
-
-  # XXX the binary will change after removing the diversions, so we want
-  # to be sure that the daemon has been stopped by that time
-  start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/inetd.pid
-
-  # remove the diversions created by old versions of this package
-  DIVERT="/usr/sbin/inetd /usr/share/man/man8/inetd.8.gz /usr/share/man/man5/inetd.conf.5.gz"
-  for file in $DIVERT; do
-    [ -e $file.netkit ] || continue
-    rm -f $file
-    dpkg-divert --package openbsd-inetd --remove --divert $file.netkit $file
-  done
-}
-
 upgrade_from_netkit_inetd() {
   if [ -e /etc/cron.daily/netkit-inetd ]; then
     rm -f /etc/cron.daily/netkit-inetd
@@ -88,7 +70,6 @@ case "$1" in
     ;;
 
     upgrade|abort-upgrade)
-    upgrade_from_old_inetd "$@"
     ;;
 
     *)

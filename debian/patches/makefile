@@ -1,18 +1,22 @@
 --- /dev/null
 +++ b/Makefile.debian
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,20 @@
++CFLAGS ?= -g -O2
++
 +DEFS := -DLIBWRAP
 +LIBS := -lwrap
 +
-+inetd_OBJECTS := inetd.o setproctitle.o strlcpy.o
++CPPFLAGS += $(DEFS)
++
++inetd_OBJECTS := inetd.o setproctitle.o strlcpy.o bsd-closefrom.o
 +
 +all: inetd
 +
 +.c.o:
-+	$(CC) $(DEFS) $(CFLAGS) -c $<
++	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
 +
 +inetd: $(inetd_OBJECTS)
-+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 +
 +clean:
 +	rm -f inetd inetd.o setproctitle.o strlcpy.o

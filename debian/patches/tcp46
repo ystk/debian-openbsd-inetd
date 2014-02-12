@@ -14,7 +14,7 @@
  .Xr fingerd 8 ,
 --- a/inetd.c
 +++ b/inetd.c
-@@ -826,10 +826,14 @@ doconfig(void)
+@@ -814,10 +814,14 @@ doconfig(void)
  
  				if (!port) {
  					/* XXX */
@@ -31,7 +31,7 @@
  					sp = getservbyname(sep->se_service,
  					    protoname);
  					if (sp == 0) {
-@@ -1023,6 +1027,16 @@ setup(struct servtab *sep)
+@@ -1011,6 +1015,16 @@ setup(struct servtab *sep)
  		    sep->se_service, sep->se_proto);
  		return;
  	}

@@ -1,6 +1,6 @@
 --- a/inetd.c
 +++ b/inetd.c
-@@ -1956,8 +1956,9 @@ spawn(struct servtab *sep, int ctrl)
+@@ -1944,8 +1944,9 @@ spawn(struct servtab *sep, int ctrl)
  					return;
  				}
  				syslog(LOG_ERR,

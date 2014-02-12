@@ -1,6 +1,6 @@
 --- a/inetd.c
 +++ b/inetd.c
-@@ -167,6 +167,7 @@ static const char rcsid[] = "$OpenBSD: i
+@@ -156,6 +156,7 @@
  #include <rpc/rpc.h>
  #include <rpc/pmap_clnt.h>
  #include "pathnames.h"
@@ -8,7 +8,7 @@
  
  size_t strlcpy(char *, const char *, size_t);
  
-@@ -331,7 +332,7 @@ fd_grow(fd_set **fdsp, int *bytes, int f
+@@ -319,7 +320,7 @@ fd_grow(fd_set **fdsp, int *bytes, int f
  struct sigaction sa, sapipe;
  
  int
@@ -17,10 +17,10 @@
  {
  	fd_set *fdsrp = NULL;
  	int readablen = 0, ch;
-@@ -342,6 +343,8 @@ main(int argc, char *argv[])
- 	progname = strrchr(argv[0], '/');
- 	progname = progname ? progname + 1 : argv[0];
- 
+@@ -327,6 +328,8 @@ main(int argc, char *argv[])
+ 	extern char *optarg;
+ 	extern int optind;
+ 	
 +	initsetproctitle(argc, argv, envp);
 +
  	while ((ch = getopt(argc, argv, "dR:")) != -1)

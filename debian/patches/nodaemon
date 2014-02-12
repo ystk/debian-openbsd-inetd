@@ -7,19 +7,19 @@
 +.Op Fl i
  .Op Fl l
  .Op Fl R Ar rate
- .Op Ar configuration file
+ .Op Ar configuration_file
 @@ -71,6 +72,8 @@ from laundering the environment.  Withou
  potentially harmful environent variables, including
  .Pa PATH ,
  will be removed and not inherited by services.
-+.It Fl d
++.It Fl i
 +Makes the program not daemonize itself.
  .It Fl l
  Turns on libwrap connection logging and access control.
  Internal services cannot be wrapped.  When enabled,
 --- a/inetd.c
 +++ b/inetd.c
-@@ -343,6 +343,7 @@ main(int argc, char *argv[], char *envp[
+@@ -331,13 +331,14 @@ main(int argc, char *argv[], char *envp[
  	fd_set *fdsrp = NULL;
  	int readablen = 0, ch;
  	int keepenv = 0;
@@ -27,8 +27,7 @@
  	struct servtab *sep;
  	extern char *optarg;
  	extern int optind;
-@@ -352,7 +353,7 @@ main(int argc, char *argv[], char *envp[
- 
+ 	
  	initsetproctitle(argc, argv, envp);
  
 -	while ((ch = getopt(argc, argv, "dElR:")) != -1)
@@ -36,7 +35,7 @@
  		switch (ch) {
  		case 'd':
  			debug = 1;
-@@ -360,6 +361,9 @@ main(int argc, char *argv[], char *envp[
+@@ -345,6 +346,9 @@ main(int argc, char *argv[], char *envp[
  		case 'E':
  			keepenv = 1;
  			break;
@@ -46,16 +45,16 @@
  		case 'l':
  #ifdef LIBWRAP
  			lflag = 1;
-@@ -386,7 +390,7 @@ main(int argc, char *argv[], char *envp[
+@@ -371,7 +375,7 @@ main(int argc, char *argv[], char *envp[
  		case '?':
  		default:
  			fprintf(stderr,
--			    "usage: %s [-dEl] [-R rate] [configuration file]\n",
-+			    "usage: %s [-dEil] [-R rate] [configuration file]\n",
- 			    progname);
+-			    "usage: inetd [-dEl] [-R rate] [configuration_file]\n");
++			    "usage: inetd [-dEil] [-R rate] [configuration_file]\n");
  			exit(1);
  		}
-@@ -415,7 +419,11 @@ main(int argc, char *argv[], char *envp[
+ 	argc -= optind;
+@@ -397,7 +401,11 @@ main(int argc, char *argv[], char *envp[
  
  	umask(022);
  	if (debug == 0) {

@@ -18,9 +18,9 @@
  wait/nowait[.max]
  user[.group] or user[:group]
  server program
-@@ -234,6 +234,30 @@ is used to specify a socket in the
- .Ux
- domain.
+@@ -234,6 +234,30 @@ of
+ is used to specify a socket in the
+ .Ux Ns -domain .
  .Pp
 +In addition to the protocol, the configuration file may specify the
 +send and receive socket buffer sizes for the listening socket.
@@ -51,7 +51,7 @@
  entry is used to tell
 --- a/inetd.c
 +++ b/inetd.c
-@@ -206,6 +206,8 @@ struct	servtab {
+@@ -198,6 +198,8 @@ struct	servtab {
  	int	se_socktype;		/* type of socket to use */
  	int	se_family;		/* address family */
  	char	*se_proto;		/* protocol used */
@@ -60,7 +60,7 @@
  	int	se_rpcprog;		/* rpc program number */
  	int	se_rpcversl;		/* rpc program lowest version */
  	int	se_rpcversh;		/* rpc program highest version */
-@@ -1252,6 +1254,8 @@ getconfigent(void)
+@@ -1240,6 +1242,8 @@ getconfigent(void)
  {
  	struct servtab *sep, *tsep;
  	char *arg, *cp, *hostdelim, *s;
@@ -69,7 +69,7 @@
  	int argc;
  
  	sep = (struct servtab *) malloc(sizeof(struct servtab));
-@@ -1327,6 +1331,93 @@ more:
+@@ -1315,6 +1319,93 @@ more:
  
  	sep->se_proto = newstr(arg);
  

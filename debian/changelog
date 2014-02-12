@@ -1,3 +1,18 @@
+openbsd-inetd (0.20091229-2) unstable; urgency=medium
+
+  * Fix hardening support by using dpkg-buildpackage. (Closes: #670886)
+
+ -- Marco d'Itri <md@linux.it>  Mon, 21 May 2012 00:17:37 +0200
+
+openbsd-inetd (0.20091229-1) unstable; urgency=medium
+
+  * New CVS snapshot.
+  * Added Multi-Arch: foreign.
+  * Documented the -i and -q command line options. (Closes: #515570, #612616)
+  * If empty, remove /etc/inetd.conf on purge. (Closes: #597622)
+
+ -- Marco d'Itri <md@linux.it>  Sun, 26 Jun 2011 00:42:55 +0200
+
 openbsd-inetd (0.20080125-6) unstable; urgency=medium
 
   * Added --oknodo to the init script, this time for real. (Closes: #592582)
