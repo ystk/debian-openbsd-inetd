@@ -1,3 +1,40 @@
+2014-04-19 00:04  jmc
+
+	* inetd.8: remove references to rshd;
+
+2013-11-23 18:24  deraadt
+
+	* inetd.c: obvious unsigned char casts for ctype
+
+2013-11-12 20:44  deraadt
+
+	* inetd.c: missing protos
+
+2013-04-19 20:03  deraadt
+
+	* inetd.c: for datagrams, assume other protocols should fail ok
+	  millert
+
+2013-03-11 18:40  deraadt
+
+	* inetd.c: handle ECONNABORTED errors from accept().  In many code
+	  blocks they can be ignored silently and without aborting, much
+	  like EINTR and EWOULDBLOCK are.  ok's from various maintainers of
+	  these directories...
+
+2012-04-19 16:33  gsoares
+
+	* inetd.c: small cleanup(%hd -> %d)
+
+	  yes deraadt@
+
+2012-03-06 02:25  dlg
+
+	* inetd.8: clean up some newly created lies now that tftpd doesnt
+	  run out of inetd.
+
+	  poke by deraadt@
+
 2009-12-29 11:25  sobrado
 
 	* inetd.8: replace a few remaining UNIX terms with .Ux macros; this

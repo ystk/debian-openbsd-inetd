@@ -1,7 +1,24 @@
-mkdir openbsd-inetd
-cd openbsd-inetd
+# how to import a new upstream snapshot:
+
+mkdir TEMP
+cd TEMP
 cvs -d anoncvs@anoncvs1.usa.openbsd.org:/cvs/src/usr.sbin/inetd/ co .
 cvs2cl
 rm -rf CVS
+VERSION="$(head -1 ChangeLog | sed -re 's/-//g; s/ .*//; s/^/0./')"
 cd ..
-mv openbsd-inetd openbsd-inetd-0...
+mv openbsd-inetd-0.* openbsd-inetd-$VERSION
+
+cd openbsd-inetd-$VERSION
+git checkout upstream
+mv ../TEMP/* .
+git add .
+git commit -m "Imported Upstream version $VERSION"
+git tag -s -m "Upstream version $VERSION" v$VERSION" 
+cd ..
+tar cJvvf openbsd-inetd_$VERSION.orig.tar.xz openbsd-inetd-$VERSION/ \
+  --exclude=.git --exclude=.pc
+
+cd openbsd-inetd-$VERSION
+git checkout master
+git merge -m "Merge upstream release v$VERSION"

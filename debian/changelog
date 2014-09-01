@@ -1,3 +1,22 @@
+openbsd-inetd (0.20140418-1) unstable; urgency=medium
+
+  * New CVS snapshot.
+  * Use bindnow and PIE hardening.
+  * Added a systemd unit file. (Closes: #716862)
+
+ -- Marco d'Itri <md@linux.it>  Thu, 05 Jun 2014 01:48:49 +0200
+
+openbsd-inetd (0.20091229-3) unstable; urgency=medium
+
+  * Updated patch libwrap: do not wrap internal services as documented,
+    to prevent a segfault. (Closes: #691852)
+  * Private implementations replaced with libbsd. (Closes: #675070)
+  * Removed from the maintainer scripts the code needed to handle upgrade
+    from netkit-inetd.
+  * Support cross-compilation.
+
+ -- Marco d'Itri <md@linux.it>  Fri, 03 Jan 2014 10:41:38 +0100
+
 openbsd-inetd (0.20091229-2) unstable; urgency=medium
 
   * Fix hardening support by using dpkg-buildpackage. (Closes: #670886)

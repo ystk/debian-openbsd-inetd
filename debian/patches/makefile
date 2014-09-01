@@ -3,12 +3,12 @@
 @@ -0,0 +1,20 @@
 +CFLAGS ?= -g -O2
 +
-+DEFS := -DLIBWRAP
-+LIBS := -lwrap
++DEFS := -DLIBWRAP $(shell pkg-config --cflags libbsd-overlay)
++LIBS := -lwrap $(shell pkg-config --libs libbsd-overlay)
 +
 +CPPFLAGS += $(DEFS)
 +
-+inetd_OBJECTS := inetd.o setproctitle.o strlcpy.o bsd-closefrom.o
++inetd_OBJECTS := inetd.o
 +
 +all: inetd
 +
@@ -19,5 +19,5 @@
 +	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 +
 +clean:
-+	rm -f inetd inetd.o setproctitle.o strlcpy.o
++	rm -f inetd inetd.o
 +

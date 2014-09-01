@@ -1,6 +1,6 @@
 --- a/inetd.8
 +++ b/inetd.8
-@@ -413,6 +413,11 @@ and IPv6 traffic will go to server on
+@@ -405,6 +405,11 @@ and IPv6 traffic will go to server on
  If you have only one server on
  .Dq tcp6 ,
  only IPv6 traffic will be routed to the server.
@@ -14,16 +14,18 @@
  .Xr fingerd 8 ,
 --- a/inetd.c
 +++ b/inetd.c
-@@ -814,10 +814,14 @@ doconfig(void)
+@@ -816,11 +816,15 @@ doconfig(void)
  
  				if (!port) {
  					/* XXX */
-+					char *p;
++					unsigned char *p;
  					strncpy(protoname, sep->se_proto,
  						sizeof(protoname));
--					if (isdigit(protoname[strlen(protoname) - 1]))
+-					if (isdigit((unsigned char)
+-					    protoname[strlen(protoname) - 1]))
 -						protoname[strlen(protoname) - 1] = '\0';
-+					for (p = protoname; *p; p++)
++					for (p = (unsigned char *)
++					    protoname; *p; p++)
 +						if (isdigit(*p)) {
 +							*p = '\0';
 +							break;
@@ -31,7 +33,7 @@
  					sp = getservbyname(sep->se_service,
  					    protoname);
  					if (sp == 0) {
-@@ -1011,6 +1015,16 @@ setup(struct servtab *sep)
+@@ -1015,6 +1019,16 @@ setup(struct servtab *sep)
  		    sep->se_service, sep->se_proto);
  		return;
  	}

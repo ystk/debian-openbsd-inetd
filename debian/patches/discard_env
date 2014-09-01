@@ -1,6 +1,6 @@
 --- a/inetd.c
 +++ b/inetd.c
-@@ -293,6 +293,7 @@ int	bump_nofile(void);
+@@ -290,6 +290,7 @@ int	bump_nofile(void);
  struct servtab *enter(struct servtab *);
  int	matchconf(struct servtab *, struct servtab *);
  int	dg_broadcast(struct in_addr *in);
@@ -8,14 +8,12 @@
  
  #define NUMINT	(sizeof(intab) / sizeof(struct inent))
  char	*CONFIG = _PATH_INETDCONF;
-@@ -324,17 +325,21 @@ main(int argc, char *argv[], char *envp[
+@@ -321,15 +322,19 @@ main(int argc, char *argv[], char *envp[
  {
  	fd_set *fdsrp = NULL;
  	int readablen = 0, ch;
 +	int keepenv = 0;
  	struct servtab *sep;
- 	extern char *optarg;
- 	extern int optind;
  	
  	initsetproctitle(argc, argv, envp);
  
@@ -31,7 +29,7 @@
  		case 'R': {	/* invocation rate */
  			char *p;
  			int val;
-@@ -352,12 +357,16 @@ main(int argc, char *argv[], char *envp[
+@@ -347,12 +352,16 @@ main(int argc, char *argv[], char *envp[
  		case '?':
  		default:
  			fprintf(stderr,
@@ -49,7 +47,7 @@
  	uid = getuid();
  	if (uid != 0)
  		CONFIG = NULL;
-@@ -2057,3 +2066,45 @@ spawn(struct servtab *sep, int ctrl)
+@@ -2052,3 +2061,45 @@ spawn(struct servtab *sep, int ctrl)
  	if (!sep->se_wait && sep->se_socktype == SOCK_STREAM)
  		close(ctrl);
  }
@@ -105,7 +103,7 @@
  .Op Fl R Ar rate
  .Op Ar configuration_file
  .Sh DESCRIPTION
-@@ -62,6 +63,13 @@ The options are as follows:
+@@ -58,6 +59,13 @@ The options are as follows:
  .Bl -tag -width Ds
  .It Fl d
  Turns on debugging.
@@ -113,7 +111,7 @@
 +Prevents
 +.Nm inetd
 +from laundering the environment.  Without this option a selection of
-+potentially harmful environent variables, including
++potentially harmful environment variables, including
 +.Pa PATH ,
 +will be removed and not inherited by services.
  .It Fl R Ar rate

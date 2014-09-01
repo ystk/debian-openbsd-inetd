@@ -48,25 +48,9 @@ EOF
   chmod 644 /etc/inetd.conf
 }
 
-upgrade_from_netkit_inetd() {
-  if [ -e /etc/cron.daily/netkit-inetd ]; then
-    rm -f /etc/cron.daily/netkit-inetd
-  fi
-  if [ -e /etc/init.d/inetd ]; then
-    rm -f /etc/init.d/inetd /etc/rc[2345].d/S20inetd
-  fi
-
-  # be sure to kill the netkit-inetd daemon, which may still be active if
-  # the moon is wrongly aligned
-  if [ -e /var/run/inetd.pid ]; then
-    start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/inetd.pid
-  fi
-}
-
 case "$1" in
     install)
     create_inetd
-    upgrade_from_netkit_inetd
     ;;
 
     upgrade|abort-upgrade)
