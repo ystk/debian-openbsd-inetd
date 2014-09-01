@@ -1,4 +1,4 @@
-/*	$OpenBSD: inetd.c,v 1.131 2009/10/27 23:59:51 deraadt Exp $	*/
+/*	$OpenBSD: inetd.c,v 1.136 2013/11/12 19:44:44 deraadt Exp $	*/
 
 /*
  * Copyright (c) 1983,1991 The Regents of the University of California.
@@ -290,6 +290,12 @@ int	dg_broadcast(struct in_addr *in);
 #define NUMINT	(sizeof(intab) / sizeof(struct inent))
 char	*CONFIG = _PATH_INETDCONF;
 
+void		fd_grow(fd_set **fdsp, int *bytes, int fd);
+int		dg_badinput(struct sockaddr *sa);
+void		inetd_setproctitle(char *a, int s);
+void		initring(void);
+u_int32_t	machtime(void);
+
 void
 fd_grow(fd_set **fdsp, int *bytes, int fd)
 {
@@ -496,9 +502,10 @@ gettcp(struct servtab *sep)
 	if (debug)
 		fprintf(stderr, "accept, ctrl %d\n", ctrl);
 	if (ctrl < 0) {
-		if (errno == EINTR)
-			return -1;
-		syslog(LOG_WARNING, "accept (for %s): %m", sep->se_service);
+		if (errno != EWOULDBLOCK && errno != EINTR &&
+		    errno != ECONNABORTED)
+			syslog(LOG_WARNING, "accept (for %s): %m",
+			    sep->se_service);
 		return -1;
 	}
 	if ((sep->se_family == AF_INET || sep->se_family == AF_INET6) &&
@@ -565,8 +572,8 @@ dg_badinput(struct sockaddr *sa)
 		}
 		break;
 	default:
-		/* XXX unsupported af, is it safe to assume it to be safe? */
-		return 0;
+		/* Unsupported AF */
+		goto bad;
 	}
 
 	if (port < IPPORT_RESERVED || port == NFS_PORT)
@@ -759,7 +766,8 @@ doconfig(void)
 					/* XXX */
 					strncpy(protoname, sep->se_proto,
 						sizeof(protoname));
-					if (isdigit(protoname[strlen(protoname) - 1]))
+					if (isdigit((unsigned char)
+					    protoname[strlen(protoname) - 1]))
 						protoname[strlen(protoname) - 1] = '\0';
 					sp = getservbyname(sep->se_service,
 					    protoname);
@@ -814,7 +822,8 @@ doconfig(void)
 					/* XXX */
 					strncpy(protoname, sep->se_proto,
 						sizeof(protoname));
-					if (isdigit(protoname[strlen(protoname) - 1]))
+					if (isdigit((unsigned char)
+					    protoname[strlen(protoname) - 1]))
 						protoname[strlen(protoname) - 1] = '\0';
 					sp = getservbyname(sep->se_service,
 					    protoname);
@@ -1663,7 +1672,7 @@ initring(void)
 	endring = ring;
 
 	for (i = 0; i <= sizeof ring; ++i)
-		if (isprint(i))
+		if (isprint((unsigned char)i))
 			*endring++ = i;
 }
 
@@ -1841,7 +1850,7 @@ print_service(char *action, struct servtab *sep)
 		fprintf(stderr, "proto=%s,", sep->se_proto);
 
 	fprintf(stderr,
-	    " wait.max=%hd.%d user:group=%s:%s builtin=%lx server=%s\n",
+	    " wait.max=%d.%d user:group=%s:%s builtin=%lx server=%s\n",
 	    sep->se_wait, sep->se_max, sep->se_user,
 	    sep->se_group ? sep->se_group : "wheel",
 	    (long)sep->se_bi, sep->se_server);
