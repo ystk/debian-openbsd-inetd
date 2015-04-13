@@ -1,3 +1,9 @@
+openbsd-inetd (0.20140418-2) unstable; urgency=medium
+
+  * Recognize IPv6-bound sockets in the init script. (Closes: #763722)
+
+ -- Marco d'Itri <md@linux.it>  Tue, 21 Oct 2014 03:22:45 +0200
+
 openbsd-inetd (0.20140418-1) unstable; urgency=medium
 
   * New CVS snapshot.

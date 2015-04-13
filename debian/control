@@ -4,9 +4,9 @@ Priority: optional
 Maintainer: Marco d'Itri <md@linux.it>
 Build-Depends: debhelper (>= 9), dh-systemd,
  pkg-config, libbsd-dev (>= 0.6.0), libwrap0-dev
-Standards-Version: 3.9.5
-Vcs-Git: git://git.debian.org/users/md/openbsd-inetd.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=users/md/openbsd-inetd.git
+Standards-Version: 3.9.6
+Vcs-Git: git://anonscm.debian.org/users/md/openbsd-inetd.git
+Vcs-Browser: http://anonscm.debian.org/cgit/users/md/openbsd-inetd.git
 
 Package: openbsd-inetd
 Architecture: any

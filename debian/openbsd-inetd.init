@@ -35,7 +35,7 @@ checkportmap () {
 } 
 
 checknoservices () {
-    if ! grep -q "^[[:alnum:]/]" /etc/inetd.conf; then
+    if ! grep -q "^[[:alnum:][/]" /etc/inetd.conf; then
 	log_action_msg "Not starting internet superserver: no services enabled"
 	exit 0
     fi

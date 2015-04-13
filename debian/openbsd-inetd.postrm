@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 if [ "$1" = "purge" ]; then
-  if [ -e /etc/inetd.conf ] && ! egrep -q '^[[:alnum:]/]' /etc/inetd.conf; then
+  if [ -e /etc/inetd.conf ] && ! grep -q '^[[:alnum:][/]' /etc/inetd.conf; then
     rm /etc/inetd.conf
   fi
 fi
